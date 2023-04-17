@@ -2,6 +2,8 @@
 
 #include "KPCharacterBase.h"
 
+#include "Components/CapsuleComponent.h"
+
 
 // Sets default values
 AKPCharacterBase::AKPCharacterBase()
@@ -32,8 +34,15 @@ float AKPCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	DamageApplied = FMath::Min(CurrentHealth, DamageApplied);
 	CurrentHealth -= DamageApplied;
-	
 	UE_LOG(LogTemp, Warning, TEXT("Taking damage, current health: %f"), CurrentHealth);
+
+	if(IsDead())
+	{
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Destroy();
+	}
+	
 	return DamageApplied;
 }
 

@@ -13,8 +13,13 @@ UCLASS()
 class KINECTPROJECT_API UKPHeroHUD : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
 	
-	
-	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetMaxMagazineCapacity(int32 MaxMagazineCapacity);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetCurrentMagazineCapacity(int32 CurrentMagazineCapacity);
 	
 };

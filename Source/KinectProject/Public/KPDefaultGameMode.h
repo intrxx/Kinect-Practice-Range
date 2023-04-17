@@ -14,7 +14,9 @@ class KINECTPROJECT_API AKPDefaultGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	void PawnKilled(APawn* PawnKilled);
+
+private:
+	void EndLevel(bool bIsPlayerWinner);
 };

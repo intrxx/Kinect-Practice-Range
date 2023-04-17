@@ -19,7 +19,7 @@ public:
 	AKPHeroController();
 	
 	void CreateHUD();
-	UKPHeroHUD* GetWidget() const;
+	UKPHeroHUD* GetHUDWidget() const;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<class UKPHeroHUD> HeroHUD;

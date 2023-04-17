@@ -21,7 +21,7 @@ void AKPHeroController::CreateHUD()
 	HeroHUDClass->AddToViewport();
 }
 
-UKPHeroHUD* AKPHeroController::GetWidget() const
+UKPHeroHUD* AKPHeroController::GetHUDWidget() const
 {
 	return HeroHUDClass;
 }

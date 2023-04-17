@@ -50,6 +50,7 @@ void AKPHeroBase::BeginPlay()
 	if(PC)
 	{
 		PC->CreateHUD();
+		PC->GetHUDWidget()->SetMaxMagazineCapacity(Weapon->MaxMagazineCapacity);
 	}
 }
 
@@ -60,13 +61,16 @@ void AKPHeroBase::Tick(float DeltaTime)
 
 void AKPHeroBase::Throw()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Throwing..."));
 	Weapon->ThrowWeapon();
 }
 
 void AKPHeroBase::Reload()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Reloading..."));
 	Weapon->CurrentMagazineCapacity = Weapon->MaxMagazineCapacity;
+	AKPHeroController* PC = Cast<AKPHeroController>(GetController());
+	if(PC)
+	{
+		PC->GetHUDWidget()->SetCurrentMagazineCapacity(Weapon->CurrentMagazineCapacity);
+	}
 }
 

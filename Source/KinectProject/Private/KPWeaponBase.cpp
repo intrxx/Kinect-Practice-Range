@@ -3,6 +3,7 @@
 #include "KPWeaponBase.h"
 
 #include "DrawDebugHelpers.h"
+#include "KPHeroController.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/Engine.h"
@@ -28,8 +29,19 @@ AKPWeaponBase::AKPWeaponBase()
 void AKPWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	CurrentMagazineCapacity = MaxMagazineCapacity;
+	
+	AKPHeroController* PC = Cast<AKPHeroController>(GetOwnerController());
+	if(PC)
+	{
+		UKPHeroHUD* HUD = Cast<UKPHeroHUD>(PC->GetHUDWidget());
+		if(HUD)
+		{
+			HUD->SetMaxMagazineCapacity(MaxMagazineCapacity);
+			HUD->SetCurrentMagazineCapacity(CurrentMagazineCapacity);
+		}
+	}
 }
 
 // Called every frame
@@ -69,7 +81,17 @@ void AKPWeaponBase::ThrowWeapon()
 		return;
 	}
 	CurrentMagazineCapacity--;
-
+	
+	AKPHeroController* PC = Cast<AKPHeroController>(GetOwnerController());
+	if(PC)
+	{
+		UKPHeroHUD* HUD = Cast<UKPHeroHUD>(PC->GetHUDWidget());
+		if(HUD)
+		{
+			HUD->SetCurrentMagazineCapacity(CurrentMagazineCapacity);
+		}
+	}
+	
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("CurrentMagazineCapacity: %i"), CurrentMagazineCapacity));
 	
 	FHitResult HitResult;
