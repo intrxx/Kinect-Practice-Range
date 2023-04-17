@@ -15,7 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	AKPWeaponBase();
 
-	void ThrowWeapon();
+	UPROPERTY(EditAnywhere)
+	int32 MaxMagazineCapacity = 5;
+	UPROPERTY(VisibleAnywhere)
+	int32 CurrentMagazineCapacity = 0;
+
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,7 +28,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
+	void ThrowWeapon();
+	
 private:
 	AController* GetOwnerController() const;
 
@@ -33,15 +40,12 @@ private:
 	USceneComponent* Root;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* WeaponMesh;
+	USkeletalMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 20.0f;
 
 	UPROPERTY(EditAnywhere)
 	float WeaponRange = 1500.0f;
-	UPROPERTY(EditAnywhere)
-	float MaxMagazineCapacity = 5.0f;
-	
 	
 };

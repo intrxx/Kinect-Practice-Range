@@ -29,6 +29,8 @@ public:
 	void Throw();
 
 private:
+	void Reload();
+	
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
 

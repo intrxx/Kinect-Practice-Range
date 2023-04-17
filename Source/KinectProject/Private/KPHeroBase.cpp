@@ -34,17 +34,16 @@ void AKPHeroBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis(TEXT("LookSide"), this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Released, this, &AKPHeroBase::Throw);
+	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Pressed, this, &AKPHeroBase::Throw);
+	PlayerInputComponent->BindAction(TEXT("Reload"), EInputEvent::IE_Pressed, this, &AKPHeroBase::Reload);
 }
 
 void AKPHeroBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CurrentHealth = MaxHealth;
-
+	
 	Weapon = GetWorld()->SpawnActor<AKPWeaponBase>(WeaponClass);
-	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("r_WeaponSocket"));
+	Weapon->AttachToComponent(Mesh_1P, FAttachmentTransformRules::KeepRelativeTransform, TEXT("GripPoint"));
 	Weapon->SetOwner(this);
 	
 	AKPHeroController* PC = Cast<AKPHeroController>(GetController());
@@ -63,5 +62,11 @@ void AKPHeroBase::Throw()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Throwing..."));
 	Weapon->ThrowWeapon();
+}
+
+void AKPHeroBase::Reload()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Reloading..."));
+	Weapon->CurrentMagazineCapacity = Weapon->MaxMagazineCapacity;
 }
 

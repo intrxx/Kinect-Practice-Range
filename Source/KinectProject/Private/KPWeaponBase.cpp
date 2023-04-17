@@ -1,7 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "KPWeaponBase.h"
+
+#include "DrawDebugHelpers.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
@@ -16,7 +20,7 @@ AKPWeaponBase::AKPWeaponBase()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(Root);
 
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	WeaponMesh->SetupAttachment(Root);
 }
 
@@ -24,7 +28,8 @@ AKPWeaponBase::AKPWeaponBase()
 void AKPWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CurrentMagazineCapacity = MaxMagazineCapacity;
 }
 
 // Called every frame
@@ -53,19 +58,31 @@ bool AKPWeaponBase::WeaponTrace(FHitResult& Hit, FVector& ThrowDirection)
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
 
+	DrawDebugLine(GetWorld(), Location, Hit.Location, FColor(255, 0, 0), false, 3, 0, 12);
 	return GetWorld()->LineTraceSingleByChannel(Hit, Location, ThrowEnd, ECollisionChannel::ECC_GameTraceChannel1, Params);
 }
 
 void AKPWeaponBase::ThrowWeapon()
 {
+	if(CurrentMagazineCapacity == 0)
+	{
+		return;
+	}
+	CurrentMagazineCapacity--;
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("CurrentMagazineCapacity: %i"), CurrentMagazineCapacity));
+	
 	FHitResult HitResult;
 	FVector ShotDirection;
 	bool bSuccess = WeaponTrace(HitResult, ShotDirection);
-
+	
 	if(bSuccess)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Weapon Hit"));
+		
 		AActor* ShotActor = HitResult.GetActor();
-		if(!ShotActor)
+		UE_LOG(LogTemp, Warning, TEXT("Shot actor: %s"), *HitResult.GetActor()->GetName());
+		if(ShotActor)
 		{
 			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
 			AController* PC = GetOwnerController();

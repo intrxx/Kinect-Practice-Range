@@ -15,7 +15,8 @@ AKPCharacterBase::AKPCharacterBase()
 void AKPCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CurrentHealth = MaxHealth;
 }
 
 // Called every frame
@@ -31,7 +32,8 @@ float AKPCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	DamageApplied = FMath::Min(CurrentHealth, DamageApplied);
 	CurrentHealth -= DamageApplied;
-
+	
+	UE_LOG(LogTemp, Warning, TEXT("Taking damage, current health: %f"), CurrentHealth);
 	return DamageApplied;
 }
 
