@@ -1,5 +1,5 @@
 #include "KinectPluginPrivatePCH.h"
-
+#include <cmath>
 #include <algorithm>
 
 
@@ -218,7 +218,7 @@ void UKinectSensor::ResetTexture(UTexture2D*& Texture, UMaterialInstanceDynamic*
 	Texture->AddToRoot();
 	Texture->UpdateResource();
 
-	m_RenderParams.Texture2DResource = (FTexture2DResource*)Texture->Resource;
+	m_RenderParams.Texture2DResource = (FTextureResource*)Texture->Resource;
 
 	////////////////////////////////////////////////////////////////////////////////
 	ResetMatInstance(Texture, MaterialInstance);
@@ -298,7 +298,7 @@ void UKinectSensor::TextureUpdate(const void *buffer, UTexture2D*& Texture, FKin
 	{
 
 		// Is our texture ready?
-		auto ref = static_cast<FTexture2DResource*>(Texture->Resource)->GetTexture2DRHI();
+		auto ref = static_cast<FTextureResource*>(Texture->Resource)->GetTexture2DRHI();
 		if (!ref)
 		{
 			UE_LOG(KinectLog, Warning, TEXT("NO REF"))
@@ -311,12 +311,13 @@ void UKinectSensor::TextureUpdate(const void *buffer, UTexture2D*& Texture, FKin
 				return;
 		}
 
-		ENQUEUE_UNIQUE_RENDER_COMMAND_FOURPARAMETER(
-			void,
-			const void*, ImageData, buffer,
-			UTexture2D*, TargetTexture, Texture,
-			int32, Stride, Width * 4,
-			FKinectTextureParams, Params, m_RenderParams,
+		const void* ImageData = buffer;
+		int32 Stride = Width * 4;
+		FKinectTextureParams Params = m_RenderParams;
+
+		ENQUEUE_RENDER_COMMAND(ImageData)(				
+
+			[Stride, Params, &ImageData] (FRHICommandListImmediate& RHICmdList)
 			{
 
 				RHIUpdateTexture2D(Params.Texture2DResource->GetTexture2DRHI(), 0, *Params.UpdateRegions, Stride, (uint8*)ImageData);

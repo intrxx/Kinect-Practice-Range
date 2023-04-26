@@ -19,7 +19,7 @@ struct FKinectTextureParams
 {
 
 	// Pointer to our Texture's resource
-	FTexture2DResource* Texture2DResource;
+	FTextureResource* Texture2DResource;
 
 	// Regions we need to update (for now, the whole image)
 	FUpdateTextureRegion2D* UpdateRegions;

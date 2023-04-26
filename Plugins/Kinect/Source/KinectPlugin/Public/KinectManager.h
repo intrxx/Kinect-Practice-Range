@@ -1,13 +1,13 @@
 #pragma once
 
 #if PLATFORM_WINDOWS
-#include "AllowWindowsPlatformTypes.h"
+#include "Windows/AllowWindowsPlatformTypes.h"
 #endif
 #include <windows.h>
 #include <ole2.h>
 #include "NuiApi.h"
 #if PLATFORM_WINDOWS
-#include "HideWindowsPlatformTypes.h"
+#include "Windows/HideWindowsPlatformTypes.h"
 #endif
 
 #include "KinectManager.generated.h"

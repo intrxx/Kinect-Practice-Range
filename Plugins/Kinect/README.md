@@ -1,3 +1,7 @@
+This repo contains my personal additions to the plugin to make it compatible with UE 4.27.
+
+The following information in this readme is from the original documentation for this plugin
+----------------------------------------
 # KinectXbox360-UE4
 kinect Xbox 360 sdk 1.8 Plugin for Unreal Engine 4
 
